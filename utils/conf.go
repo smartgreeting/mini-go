@@ -1,8 +1,8 @@
 /*
  * @Author: lihuan
- * @Date: 2021-12-13 20:15:52
+ * @Date: 2024-08-27 20:42:11
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-03 22:08:07
+ * @LastEditTime: 2024-09-04 20:52:32
  * @Email: 17719495105@163.com
  */
 package utils
@@ -10,11 +10,8 @@ package utils
 import (
 	"fmt"
 	"io/ioutil"
-	"sync"
 
 	"gopkg.in/yaml.v3"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
 type Conf struct {
@@ -59,22 +56,4 @@ func InitConf(path string) (*Conf, error) {
 	err = yaml.Unmarshal(yamlFile, &Cfg)
 
 	return Cfg, err
-}
-
-var (
-	db   *gorm.DB
-	lock sync.Mutex
-)
-
-func GetDB() *gorm.DB {
-	lock.Lock()
-	defer lock.Unlock()
-	if db == nil {
-		_db, err := gorm.Open(mysql.Open(Cfg.MySql.Dns), &gorm.Config{})
-		if err != nil {
-			panic(err)
-		}
-		db = _db
-	}
-	return db
 }
