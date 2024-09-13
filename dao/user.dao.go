@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-09-02 21:14:58
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-03 21:40:17
+ * @LastEditTime: 2024-09-12 21:04:38
  * @Email: 17719495105@163.com
  */
 package dao
@@ -28,7 +28,12 @@ func NewUserDao(ctx context.Context, db *gorm.DB) *UserDao {
 func (u UserDao) FindUserInfoById(id int64) (*models.User, error) {
 
 	var user models.User
-	err := u.db.Where("id = ? AND deleted = ?", id, 0).First(&user).Error
+	err := u.db.Where("id = ?", id).First(&user).Error
 
 	return &user, err
+}
+func (u UserDao) DelById(id int64) error {
+	err := u.db.Delete(&models.User{}, id).Error
+
+	return err
 }

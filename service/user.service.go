@@ -2,12 +2,13 @@
  * @Author: lihuan
  * @Date: 2024-09-02 21:14:45
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-05 21:06:15
+ * @LastEditTime: 2024-09-13 20:05:16
  * @Email: 17719495105@163.com
  */
 package service
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -38,5 +39,17 @@ func (u *UserService) GetUserInfo(ctx *gin.Context) {
 	default:
 
 	}
+
+}
+func (u *UserService) DelUserInfo(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Query("id"))
+
+	err := u.svcCtx.UserDao.DelById(int64(id))
+	fmt.Println(err)
+	if err != nil {
+		utils.ErrorResponse(ctx, "删除失败")
+		return
+	}
+	utils.SuccessResponse(ctx, nil)
 
 }

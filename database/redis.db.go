@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-09-04 19:29:38
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-04 20:24:16
+ * @LastEditTime: 2024-09-13 21:52:15
  * @Email: 17719495105@163.com
  */
 package database
@@ -45,4 +45,10 @@ func (*RedisDB) Set(key string, value interface{}, expiration time.Duration) *re
 
 func (*RedisDB) Get(key string) *redis.StringCmd {
 	return redisDB.Get(redisCtx, key)
+}
+func (*RedisDB) TTL(key string) *redis.DurationCmd {
+	return redisDB.TTL(redisCtx, key)
+}
+func (*RedisDB) PTTL(key string) *redis.DurationCmd {
+	return redisDB.PTTL(redisCtx, key)
 }

@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-09-03 20:51:36
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-04 20:40:57
+ * @LastEditTime: 2024-09-12 21:04:59
  * @Email: 17719495105@163.com
  */
 package svc
@@ -37,6 +37,6 @@ func NewSvcContext(c *utils.Conf) *SvcContext {
 		Config:  c,
 		DB:      db,
 		RedisDB: rdb,
-		UserDao: dao.NewUserDao(ctx, db),
+		UserDao: dao.NewUserDao(ctx, db.Debug()),
 	}
 }

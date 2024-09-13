@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2021-12-13 20:15:52
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-05 21:19:27
+ * @LastEditTime: 2024-09-05 21:28:46
  * @Email: 17719495105@163.com
  */
 package utils
@@ -59,7 +59,7 @@ func ErrorResponse(ctx *gin.Context, value ...interface{}) {
 			getJson(ctx, 5000, "服务异常", data)
 		}
 	}
-
+	return
 }
 
 func getJson(ctx *gin.Context, code int, msg string, data interface{}) {
@@ -87,7 +87,7 @@ func SuccessResponse(ctx *gin.Context, value ...interface{}) {
 			"data": value[0],
 		})
 	}
-
+	return
 }
 
 func GetMsg(code int) string {

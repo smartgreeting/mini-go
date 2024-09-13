@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-08-27 20:42:11
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-04 20:52:32
+ * @LastEditTime: 2024-09-12 22:40:51
  * @Email: 17719495105@163.com
  */
 package utils
@@ -20,6 +20,7 @@ type Conf struct {
 	Md5         Md5
 	MySql       MySql
 	Redis       Redis
+	WX          WX
 }
 
 type Token struct {
@@ -36,6 +37,10 @@ type Redis struct {
 	Dns  string
 	Pass string
 	DB   int
+}
+type WX struct {
+	AppID     string `yaml:"app_id"`
+	AppSecret string `yaml:"app_secret"`
 }
 
 type Application struct {
