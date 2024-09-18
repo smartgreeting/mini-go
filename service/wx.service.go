@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-09-13 20:04:30
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-13 22:22:56
+ * @LastEditTime: 2024-09-16 20:37:32
  * @Email: 17719495105@163.com
  */
 package service
@@ -39,7 +39,7 @@ func (w *WXService) GetOpenIDByCode(ctx *gin.Context) {
 
 	var openIdReplay models.OpenIdReplay
 
-	utils.WXHttpGet(ctx, utils.WXHttpGetOptions{
+	utils.HttpHandle(ctx, utils.HttpHandleOptions{
 		Url:   url,
 		Reply: &openIdReplay,
 	})
@@ -55,38 +55,54 @@ func (w *WXService) GetOpenIDByCode(ctx *gin.Context) {
 
 // 获取 access_token GetAccessToken
 // https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-access-token/getAccessToken.html
+
+func (w *WXService) GetAccessToken(ctx *gin.Context) {
+
+	res, _ := GetCacheToken(ctx, w.svcCtx)
+
+	utils.SuccessResponse(ctx, res)
+}
+
+// 获取手机号 https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/phone-number/getPhoneNumber.html
+func (w *WXService) GetPhoneNumber(ctx *gin.Context) {
+
+	res, _ := GetCacheToken(ctx, w.svcCtx)
+	url := fmt.Sprintf("%s?access_token=%s", constants.GetUserPhoneNumber, res.AccessToken)
+	var phoneReply models.GetUserPhoneNumberReplay
+	utils.HttpHandle(ctx, utils.HttpHandleOptions{
+		Url:   url,
+		Reply: &phoneReply,
+	})
+	fmt.Println(phoneReply)
+}
+
 const (
 	AccessTokenKey = "__Access_Token_Redis_Key__"
 	Times          = 90 //缓存时间 90 分钟
 )
 
-func (w *WXService) GetAccessToken(ctx *gin.Context) {
-
+func GetCacheToken(ctx *gin.Context, svcCtx *svc.SvcContext) (models.AccessTokenReplay, error) {
 	// 从缓存中获取
-	val, _ := w.svcCtx.RedisDB.Get(AccessTokenKey).Result()
+	val, _ := svcCtx.RedisDB.Get(AccessTokenKey).Result()
 	var accessTokenReply models.AccessTokenReplay
 	json.Unmarshal([]byte(val), &accessTokenReply)
 
 	if len(val) != 0 {
-		ttl, _ := w.svcCtx.RedisDB.TTL(AccessTokenKey).Result()
-		utils.SuccessResponse(ctx, &models.AccessTokenReplay{
+		ttl, _ := svcCtx.RedisDB.TTL(AccessTokenKey).Result()
+		return models.AccessTokenReplay{
 			AccessToken: accessTokenReply.AccessToken,
 			ExpiresIn:   int(ttl) / int(time.Second),
-		})
-		return
+		}, nil
 	}
-
-	wx := w.svcCtx.Config.WX
+	wx := svcCtx.Config.WX
 	url := fmt.Sprintf("%s?appid=%s&secret=%s&grant_type=client_credential", constants.GetAccessToken, wx.AppID, wx.AppSecret)
 
 	var accessTokenReplay models.AccessTokenReplay
 
-	body, _ := utils.WXHttpGet(ctx, utils.WXHttpGetOptions{
+	body, _ := utils.HttpHandle(ctx, utils.HttpHandleOptions{
 		Url:   url,
 		Reply: &accessTokenReplay,
 	})
-
-	w.svcCtx.RedisDB.Set(AccessTokenKey, body, Times*time.Minute).Err()
-
-	utils.SuccessResponse(ctx, accessTokenReplay)
+	svcCtx.RedisDB.Set(AccessTokenKey, body, Times*time.Minute).Err()
+	return accessTokenReplay, nil
 }

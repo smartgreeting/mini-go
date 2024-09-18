@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-09-13 22:03:05
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-13 22:21:20
+ * @LastEditTime: 2024-09-14 23:19:26
  * @Email: 17719495105@163.com
  */
 package utils
@@ -15,15 +15,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type WXHttpGetOptions struct {
+type HttpHandleOptions struct {
 	Url   string
 	Reply interface{}
 }
 
-func WXHttpGet(ctx *gin.Context, opt WXHttpGetOptions) ([]byte, error) {
+func HttpHandle(ctx *gin.Context, opt HttpHandleOptions) ([]byte, error) {
 	resp, err := http.Get(opt.Url)
 	if err != nil {
-		ErrorResponse(ctx, "调用微信接口异常")
+		ErrorResponse(ctx, "调用第三方接口异常")
 		return nil, err
 	}
 	defer resp.Body.Close()
