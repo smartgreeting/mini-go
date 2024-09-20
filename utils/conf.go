@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-08-27 20:42:11
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-12 22:40:51
+ * @LastEditTime: 2024-09-18 21:07:29
  * @Email: 17719495105@163.com
  */
 package utils
@@ -21,6 +21,7 @@ type Conf struct {
 	MySql       MySql
 	Redis       Redis
 	WX          WX
+	Log         Log
 }
 
 type Token struct {
@@ -41,6 +42,10 @@ type Redis struct {
 type WX struct {
 	AppID     string `yaml:"app_id"`
 	AppSecret string `yaml:"app_secret"`
+}
+type Log struct {
+	LogFilePath string `yaml:"log_file_path"`
+	LogFileName string `yaml:"log_file_name"`
 }
 
 type Application struct {

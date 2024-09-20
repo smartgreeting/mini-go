@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-08-26 20:15:09
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-03 21:55:16
+ * @LastEditTime: 2024-09-20 20:40:56
  * @Email: 17719495105@163.com
  */
 package main
@@ -22,7 +22,6 @@ func main() {
 	}
 	svcCtx := svc.NewSvcContext(cfg)
 	r := handler.SetupRouter(svcCtx)
-
 	r.Run(fmt.Sprintf("%s:%d", cfg.Application.Address, cfg.Application.Port))
 
 }
