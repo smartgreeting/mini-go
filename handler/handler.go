@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-08-31 20:00:17
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-20 20:44:17
+ * @LastEditTime: 2024-09-22 21:48:51
  * @Email: 17719495105@163.com
  */
 package handler
@@ -21,9 +21,12 @@ func SetupRouter(svcCtx *svc.SvcContext) *gin.Engine {
 	userService := service.NewUserService(svcCtx)
 	wxService := service.NewWXService(svcCtx)
 	v1 := r.Group("/v1")
+	v1.GET("/user/getOpenId", wxService.GetOpenIDByCode)
+	v1.GET("/user/getTokenByOpenId", userService.GetTokenByOpenId)
+
+	v1.Use(middleware.JWT())
 	v1.GET("/getUserInfo", userService.GetUserInfo)
 	v1.DELETE("/delUserInfo", userService.DelUserInfo)
-	v1.GET("/getOpenId", wxService.GetOpenIDByCode)
-	v1.GET("/getPhoneNumber", wxService.GetPhoneNumber)
+	v1.GET("/user/getPhoneNumber", wxService.GetPhoneNumber)
 	return r
 }

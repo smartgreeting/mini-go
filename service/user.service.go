@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-09-02 21:14:45
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-13 20:05:16
+ * @LastEditTime: 2024-09-22 21:53:43
  * @Email: 17719495105@163.com
  */
 package service
@@ -52,4 +52,16 @@ func (u *UserService) DelUserInfo(ctx *gin.Context) {
 	}
 	utils.SuccessResponse(ctx, nil)
 
+}
+
+func (u *UserService) GetTokenByOpenId(ctx *gin.Context) {
+	id := ctx.Query("openid")
+	cfg := u.svcCtx.Config
+
+	token, err := utils.GenerateToken(id, []byte(cfg.Token.Secret), cfg.Token.ExpireTime)
+	if err != nil {
+		utils.ErrorResponse(ctx, "生成token失败")
+		return
+	}
+	utils.SuccessResponse(ctx, token)
 }

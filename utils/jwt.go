@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-09-01 20:42:11
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-04 20:53:59
+ * @LastEditTime: 2024-09-22 18:03:59
  * @Email: 17719495105@163.com
  */
 package utils
@@ -14,18 +14,16 @@ import (
 )
 
 type Claims struct {
-	UserName string `json:"username"`
-	ID       int64  `json:"id"`
+	ID string `json:"id"`
 	jwt.StandardClaims
 }
 
-func GenerateToken(id int64, username string, secret []byte, exp int) (string, error) {
+func GenerateToken(id string, secret []byte, exp int) (string, error) {
 
 	nowTime := time.Now()
 	expireTime := nowTime.Add(time.Duration(exp) * time.Hour)
 
 	claims := Claims{
-		username,
 		id,
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
