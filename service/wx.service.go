@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-09-13 20:04:30
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-16 20:37:32
+ * @LastEditTime: 2024-09-23 22:36:55
  * @Email: 17719495105@163.com
  */
 package service
@@ -47,6 +47,13 @@ func (w *WXService) GetOpenIDByCode(ctx *gin.Context) {
 	if openIdReplay.Errcode != 0 {
 		str := fmt.Sprintf("%d:%s", openIdReplay.Errcode, openIdReplay.Errmsg)
 		utils.ErrorResponse(ctx, str)
+		return
+	}
+	// openid作为微信用户的唯一标识 插入数据库
+	_, err := w.svcCtx.UserDao.CreatUserInfo(&models.User{Openid: openIdReplay.Openid})
+	if err != nil {
+		utils.ErrorResponse(ctx, "创建数据失败")
+		w.svcCtx.Logger.Error("UserDao.CreatUserInfo 创建数据失败")
 		return
 	}
 	utils.SuccessResponse(ctx, openIdReplay)

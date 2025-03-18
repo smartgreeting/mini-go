@@ -2,7 +2,7 @@
  * @Author: lihuan
  * @Date: 2024-09-02 21:14:58
  * @LastEditors: lihuan
- * @LastEditTime: 2024-09-12 21:04:38
+ * @LastEditTime: 2024-09-23 22:32:07
  * @Email: 17719495105@163.com
  */
 package dao
@@ -36,4 +36,12 @@ func (u UserDao) DelById(id int64) error {
 	err := u.db.Delete(&models.User{}, id).Error
 
 	return err
+}
+func (u UserDao) CreatUserInfo(user *models.User) (*models.User, error) {
+	r := u.db.First(&user, "openid= ?", user.Openid)
+	if r.RowsAffected == 0 {
+		err := u.db.Create(&user).Error
+		return user, err
+	}
+	return user, nil
 }

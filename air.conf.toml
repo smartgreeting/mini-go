@@ -1,0 +1,8 @@
+# air.conf.toml
+root = "."
+tmp_dir = "tmp/air"
+ignore = ["\\._", "\\.DS_Store", "air\\.toml", "tmp/.*"]
+watch = ["./..."]  # 监视当前目录及其子目录中的所有文件
+log = "air.log"
+delay = "1s"  # 在检测到文件变化后等待的延迟时间
+exec = "go run main.go"  # 要执行的命令，
